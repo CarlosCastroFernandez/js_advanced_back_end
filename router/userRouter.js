@@ -1,10 +1,12 @@
 const express=require("express");
-const { getAllUser,insertAllUser, createNewUser } = require("../controller/userController");
+const { getAllUser,insertAllUser, createNewUser, login } = require("../controller/userController");
+const {verifyToken,verifyAdmin} = require("../middleware/middleware");
 
 const router=express.Router();
 
-router.get("/",getAllUser);
+router.get("/",verifyToken,verifyAdmin, getAllUser);
 router.post("/insert",insertAllUser);
-router.post("/newUser",createNewUser);
+router.post("/newUser", verifyToken,verifyAdmin,createNewUser);
+router.post("/login",login);
 
 module.exports=router;

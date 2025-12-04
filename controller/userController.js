@@ -1,6 +1,7 @@
 const { default: mongoose } = require("mongoose");
 const userModel = require("../model/userModel");
 const bcrypt=require("bcrypt");
+const generateToken = require("../auth/auth_token");
 
 const getAllUser = async (req, res) => {
   try {
@@ -119,5 +120,34 @@ const createNewUser=async (req,res)=>{
  
 
 }
+const login = async (req, res) => {
 
-module.exports = { getAllUser, insertAllUser, createNewUser };
+    try {
+        const { email, password } = req.body;
+
+        const user = await userModel.findOne({ email })
+
+        if (!user) return res.status(200).send("Este usuario no existe, credemciales erroneas");
+
+        const isMatch= password===user.password;
+
+        if (!isMatch) return res.status(200).send("Credenciales errones")
+
+            const payload={
+                _id:user._id,
+                 email:user.email,
+                 role:user.role,
+                 isActive:user.isActive
+            }
+
+            const token= generateToken(payload,false)
+            const tokenRefresh=generateToken(payload,true)
+
+        return res.status(200).json({status:"Success",data:user,token,tokenRefresh});
+    } catch (e) {
+        return res.status(500).send({ failed: "Failed", message: e })
+    }
+
+}
+
+module.exports = { getAllUser, insertAllUser, createNewUser, login };
