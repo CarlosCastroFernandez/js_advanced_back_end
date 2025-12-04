@@ -128,7 +128,7 @@ const login = async (req, res) => {
         const user = await userModel.findOne({ email })
 
         if (!user) return res.status(200).send("Este usuario no existe, credemciales erroneas");
-
+        //PONER BIEN EL BCRYPT EN BASE DE DATOS
         const isMatch= password===user.password;
 
         if (!isMatch) return res.status(200).send("Credenciales errones")
@@ -145,9 +145,24 @@ const login = async (req, res) => {
 
         return res.status(200).json({status:"Success",data:user,token,tokenRefresh});
     } catch (e) {
-        return res.status(500).send({ failed: "Failed", message: e })
+        return res.status(500).send({ failed: "Failed", message: e.message })
     }
 
 }
 
-module.exports = { getAllUser, insertAllUser, createNewUser, login };
+const editUser=async (req,res)=>{
+  const userNew=req.body;
+  const {identification}=req.query;
+  try {
+    const userEdit=await userModel.findByIdAndUpdate(identification,userNew,{
+      new:true,
+      runValidators:true
+    })
+    if (!userEdit) return res.status(404).send({status:"Failed",message:"No hay usuario que editar"})
+      return res.status(200).send({status:"Success",data:userEdit})
+  } catch (error) {
+    return res.status(200).send({status:"Failed",message:"Hubo algun error "+error.message})
+  }
+}
+
+module.exports = { getAllUser, insertAllUser, createNewUser, login , editUser };
