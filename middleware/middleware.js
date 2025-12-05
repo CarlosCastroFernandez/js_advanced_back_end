@@ -11,7 +11,8 @@ const verifyToken = (req, res, next) => {
         next();
     } catch (e) {
         try {
-            const payload = jwt.verify(authToken, process.env.SECRET_TOKEN_REFRESH);
+            console.log("SEGUNDO REFRESH");
+            const payload = jwt.verify(authToken, process.env.SECRET_REFRESH_TOKEN);
 
             req.payload = payload;
             next();

@@ -190,4 +190,29 @@ const deleteUser = async (req, res) => {
   }
 }
 
-module.exports = { getAllUser, insertAllUser, createNewUser, login, editUser, deleteUser };
+const newUserToken=async (req,res)=>{
+  try {
+  console.log("NEW TOKEN");
+  const payload=req.payload;
+  console.log(payload);
+  const user=await userModel.findById(payload._id).select("_id email role isActive");
+  if (!user) res.status("404").send({status:"Failed",message:"No existe Usuario"})
+    const newPayload={
+      _id:user._id,
+      email:user.email,
+      role:user.role,
+      isActive:user.isActive
+    };
+    const newToken=generateToken(newPayload,false);
+  return res.status(200).send({status:"Success",tokenNew:newToken})
+    
+  } catch (error) {
+     return res.status(500).send({ status: "Failed", message: error.message })
+  }
+ 
+
+  
+}
+
+module.exports = { getAllUser, insertAllUser, createNewUser, login, editUser, deleteUser, newUserToken };
+

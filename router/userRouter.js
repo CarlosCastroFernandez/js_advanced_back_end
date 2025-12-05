@@ -1,5 +1,5 @@
 const express=require("express");
-const { getAllUser,insertAllUser, createNewUser, login, editUser, deleteUser } = require("../controller/userController");
+const { getAllUser,insertAllUser, createNewUser, login, editUser, deleteUser, newUserToken } = require("../controller/userController");
 const {verifyToken,verifyAdmin} = require("../middleware/middleware");
 
 const router=express.Router();
@@ -10,5 +10,6 @@ router.post("/newUser", verifyToken,verifyAdmin,createNewUser);
 router.post("/login",login);
 router.put("/edit",verifyToken,verifyAdmin,editUser);
 router.delete("/delete",verifyToken,verifyAdmin,deleteUser);
+router.get("/newToken",verifyToken,newUserToken)
 
 module.exports=router;

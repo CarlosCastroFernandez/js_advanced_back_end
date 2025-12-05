@@ -10,7 +10,7 @@ const generateToken = (payload, isRefreshToken) => {
         }
 
         return jsonwebtoken.sign(payload, process.env.SECRET_TOKEN, {
-            expiresIn: "60min"
+            expiresIn: "1min"
         });
 
 
