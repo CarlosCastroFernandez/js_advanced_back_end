@@ -4,7 +4,7 @@ const cors = require("cors");
 const connectDataBase = require("./db/connect");
 const router = require("./router/userRouter");
 const app = express();
-const PORT = Number(process.env.PORT || 3000);
+const PORT = parseInt(process.env.PORT) || 3000;
 
 app.use(express.json());
 app.use(
@@ -19,6 +19,6 @@ connectDataBase();
 
 app.use("/getAllUser", router);
 
-app.listen(3000, () => {
+app.listen(PORT, () => {
   console.log("Escuchando...");
 });
